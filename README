@@ -1,9 +1,0 @@
-
-Idea
----------------------------
-Trying to write a tool like cscope. With cscope the index can become too large, specially with very large code bases. 
-I hit this problem at work. Also, I don't like the speed with which the regex search works in cscope. Secondly, I want to learn python :)
-
-For the time being I'm interested in the parsing and the data structures for indexing. 
-
-
