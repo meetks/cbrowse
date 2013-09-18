@@ -2,8 +2,9 @@
 #include <string.h>
 #include <malloc.h>
 #include <assert.h>
+#include <ctype.h>
 
-#define CHILDMAX 36
+#define CHILDMAX 36+1
 
 typedef struct node_s {
   char* filename;
@@ -40,9 +41,17 @@ addnode(node_t *trie,char *str)
   if (*str == '\0') {
     return;
   } else {
-    x = *str - 'A';
+    if (*str == '_') { 
+     x = CHILDMAX - 1;
+    } else {
+      x = *str - 'A';
+    }
     dummy = alloc_node(NULL);
-    trie->ptrs[x] = dummy;
+    if (x > 0 && x < CHILDMAX) {
+        trie->ptrs[x] = dummy;
+    } else {
+        return;
+    }
     str++;
     addnode(trie->ptrs[x], str);
   }
@@ -58,9 +67,12 @@ findnode(node_t *trie, char *str)
    if (*str == '\0') return 1;
    if (found == 0) return 0;
 
-   x = *str;
-   x = x - 'A';
-
+   if (*str == '_') { 
+     x = CHILDMAX - 1;
+   } else {
+     x = *str;
+     x = x - 'A';
+   }
    if (trie->ptrs[x]) {
      str++; 
      findnode(trie->ptrs[x], str);
@@ -77,6 +89,7 @@ main()
    char str[1024];
    node_t *trie;
    FILE *fp;
+   int i;
 
    trie = alloc_node(NULL);
    fp = fopen("/etc/dictionaries-common/words","r");
@@ -87,8 +100,15 @@ main()
 
    while (!feof(fp)) {
      fgets(str,1024,fp);
-     printf("\n %s", str);
-     addnode(trie, str);
+     for(i = 0;i < strlen(str); i++) { 
+        if (!(isalnum(str[i]))) {
+            printf("\n Not a indentifier");
+            printf("\n %s", str);
+            continue;
+        } else {
+        addnode(trie, str);
+        }
+     }
    }
    fclose(fp);
    if( findnode(trie,"Hell")) {
