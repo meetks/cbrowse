@@ -1,4 +1,4 @@
 cbrowse
 =======
 
-Trying to learn python by writing a code browser like cscope. 
+Trying to learn by writing a code browser like cscope. 
